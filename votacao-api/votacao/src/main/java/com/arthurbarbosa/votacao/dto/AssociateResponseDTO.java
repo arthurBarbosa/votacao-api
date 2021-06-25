@@ -24,7 +24,7 @@ public class AssociateResponseDTO {
 
     public AssociateResponseDTO(Associate entity) {
         this.id = entity.getId();
-        this.name = entity.getName();
         this.cpf = entity.getCpf();
+        this.name = entity.getName();
     }
 }
