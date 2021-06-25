@@ -7,4 +7,6 @@ public interface VotationRepository extends JpaRepository<Votation, Long> {
     Long countBySessionIdAndVoteTrue(Long sessionId);
 
     Long countBySessionIdAndVoteFalse(Long sessionId);
+
+    Votation findBySessionIdAndAssociateId(Long id, Long associateId);
 }
