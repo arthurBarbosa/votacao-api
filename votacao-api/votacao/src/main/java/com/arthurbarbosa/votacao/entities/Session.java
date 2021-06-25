@@ -27,4 +27,9 @@ public class Session {
     @OneToOne
     @JoinColumn(name = "SES_SCH_ID", referencedColumnName = "SCH_ID", nullable = false)
     private Schedule schedule;
+
+    @PrePersist
+    public void prePersist(){
+        this.isOpen = false;
+    }
 }
