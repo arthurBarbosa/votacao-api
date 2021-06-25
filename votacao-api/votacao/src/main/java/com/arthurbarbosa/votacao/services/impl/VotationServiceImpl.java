@@ -29,7 +29,7 @@ public class VotationServiceImpl implements VotationService {
     public VoteCountDTO countVotes(Long sessionId) {
         var session = sessionRepository.findById(sessionId).orElseThrow(() -> new ObjectNotFoundException("Sessão de voto não encontrada"));
         if (session.isOpen())
-            throw new RuntimeException("Não é possível ter o resultado da votação durante uma sessão aberta");
+            throw new CountVoteSessionOpenException(ExceptionEnum.COUNT_VOTE_SESSION_OPEN.getDescription());
 
         var dto = new VoteCountDTO();
         dto.setVotesYes(votationRepository.countBySessionIdAndVoteTrue(sessionId));
@@ -40,7 +40,7 @@ public class VotationServiceImpl implements VotationService {
     @Override
     public VoteRequestDTO vote(Long sessionId, boolean vote, Long associateId) {
         var dto = new VoteRequestDTO();
-        var session = sessionRepository.findById(sessionId).orElseThrow(() -> new RuntimeException("Nenhuma sessão encontrada."));
+        var session = sessionRepository.findById(sessionId).orElseThrow(() -> new ObjectNotFoundException(ExceptionEnum.RESOURCE_NOT_FOUND.getDescription()));
         if (!session.isOpen())
             throw new CountVoteSessionOpenException(ExceptionEnum.COUNT_VOTE_SESSION_OPEN.getDescription());
 
@@ -48,7 +48,7 @@ public class VotationServiceImpl implements VotationService {
         if (votation != null)
             throw new RuntimeException("Voto duplicado");
         else {
-            var associate = associateRepository.findById(associateId).orElseThrow(() -> new RuntimeException("Nenhum associado encontrado"));
+            var associate = associateRepository.findById(associateId).orElseThrow(() -> new ObjectNotFoundException(ExceptionEnum.RESOURCE_NOT_FOUND.getDescription()));
             votation = new Votation();
             votation.setSession(session);
             votation.setAssociate(associate);
