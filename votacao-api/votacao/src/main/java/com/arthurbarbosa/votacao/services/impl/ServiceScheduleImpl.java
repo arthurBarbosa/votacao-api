@@ -4,7 +4,9 @@ import com.arthurbarbosa.votacao.dto.ScheduleRequestDTO;
 import com.arthurbarbosa.votacao.dto.ScheduleResponseDTO;
 import com.arthurbarbosa.votacao.entities.Schedule;
 import com.arthurbarbosa.votacao.repositories.ScheduleRepository;
+import com.arthurbarbosa.votacao.resources.exceptions.ExceptionEnum;
 import com.arthurbarbosa.votacao.services.ScheduleService;
+import com.arthurbarbosa.votacao.services.exception.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,7 +31,7 @@ public class ServiceScheduleImpl implements ScheduleService {
     @Override
     public ScheduleResponseDTO findById(Long id) {
         var schedule = scheduleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Nenhum pauta encontrada com id " + id));
+                .orElseThrow(() -> new ObjectNotFoundException(ExceptionEnum.RESOURCE_NOT_FOUND.getDescription()));
         return new ScheduleResponseDTO(schedule);
     }
 
