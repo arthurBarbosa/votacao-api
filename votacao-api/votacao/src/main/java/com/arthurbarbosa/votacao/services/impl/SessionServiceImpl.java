@@ -8,6 +8,9 @@ import com.arthurbarbosa.votacao.repositories.SessionRepository;
 import com.arthurbarbosa.votacao.services.SessionService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class SessionServiceImpl implements SessionService {
 
@@ -42,5 +45,11 @@ public class SessionServiceImpl implements SessionService {
                 .orElseThrow(() -> new RuntimeException("Nenhuma sessão encontrado com id: " + id));
 
         return new SessionResponseDTO(session);
+    }
+
+    @Override
+    public List<SessionResponseDTO> findAll() {
+        List<Session> sessions = sessionRepository.findAll();
+        return sessions.stream().map(SessionResponseDTO::new).collect(Collectors.toList());
     }
 }
