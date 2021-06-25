@@ -19,6 +19,6 @@ public class VoteRequestDTO {
     @Schema(description = "session's id", example = "1")
     private Long sessionId;
 
-    @Schema(description = "session's id", example = "1")
-    private Boolean vote;
+    @Schema(description = "sim = 1 / não = 0", example = "1")
+    private String vote;
 }
