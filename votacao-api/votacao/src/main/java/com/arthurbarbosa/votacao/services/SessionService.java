@@ -11,4 +11,6 @@ public interface SessionService {
     SessionResponseDTO findById(Long id);
 
     List<SessionResponseDTO> findAll();
+
+    SessionResponseDTO openSession(Long id);
 }

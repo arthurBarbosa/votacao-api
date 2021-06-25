@@ -52,4 +52,13 @@ public class SessionServiceImpl implements SessionService {
         List<Session> sessions = sessionRepository.findAll();
         return sessions.stream().map(SessionResponseDTO::new).collect(Collectors.toList());
     }
+
+    @Override
+    public SessionResponseDTO openSession(Long id) {
+        var session = sessionRepository.findById(id).orElseThrow(() -> new RuntimeException("Nenhuma sessão encontrada."));
+        session.setOpen(true);
+        var sessionSave = sessionRepository.save(session);
+
+        return new SessionResponseDTO(sessionSave);
+    }
 }
