@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/associates")
@@ -33,5 +34,11 @@ public class AssociateResource {
     public ResponseEntity<AssociateResponseDTO> findById(@PathVariable Long id){
         return ResponseEntity.ok().body(associateService.findById(id));
     }
+
+    @GetMapping(value = "/all")
+    public ResponseEntity<List<AssociateResponseDTO>> findAll(){
+        return ResponseEntity.ok().body(associateService.findAll());
+    }
+
 
 }
