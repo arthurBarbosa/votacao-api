@@ -1,5 +1,7 @@
 package com.arthurbarbosa.votacao.resources.exceptions;
 
+import com.arthurbarbosa.votacao.services.exception.CountVoteSessionOpenException;
+import com.arthurbarbosa.votacao.services.exception.ObjectNotFoundException;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
@@ -9,10 +11,12 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -65,6 +69,32 @@ public class ErrorHandlerExcption extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, errors, headers, status, request);
     }
 
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    public ResponseEntity<Object> handleException(SQLIntegrityConstraintViolationException ex, WebRequest request){
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        ExceptionEnum errorType = ExceptionEnum.INVALID_DATA;
+        String msg = ex.getMessage();
+        Error errors = createErrorBuilder(status, errorType, msg).build();
+        return handleExceptionInternal(ex, errors, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(CountVoteSessionOpenException.class)
+    public ResponseEntity<Object> handleException(CountVoteSessionOpenException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        ExceptionEnum errorType = ExceptionEnum.COUNT_VOTE_SESSION_OPEN;
+        String msg = ex.getMessage();
+        Error errors = createErrorBuilder(status, errorType, msg).build();
+        return handleExceptionInternal(ex, errors, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(ObjectNotFoundException.class)
+    public ResponseEntity<Object> handleException(ObjectNotFoundException ex, WebRequest request){
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        ExceptionEnum errorType = ExceptionEnum.RESOURCE_NOT_FOUND;
+        String msg = ex.getMessage();
+        Error errors = createErrorBuilder(status, errorType, msg).build();
+        return handleExceptionInternal(ex, errors, new HttpHeaders(), status, request);
+    }
 
 
 }

@@ -6,7 +6,10 @@ import com.arthurbarbosa.votacao.entities.Votation;
 import com.arthurbarbosa.votacao.repositories.AssociateRepository;
 import com.arthurbarbosa.votacao.repositories.SessionRepository;
 import com.arthurbarbosa.votacao.repositories.VotationRepository;
+import com.arthurbarbosa.votacao.resources.exceptions.ExceptionEnum;
 import com.arthurbarbosa.votacao.services.VotationService;
+import com.arthurbarbosa.votacao.services.exception.CountVoteSessionOpenException;
+import com.arthurbarbosa.votacao.services.exception.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,7 +27,7 @@ public class VotationServiceImpl implements VotationService {
 
     @Override
     public VoteCountDTO countVotes(Long sessionId) {
-        var session = sessionRepository.findById(sessionId).orElseThrow(() -> new RuntimeException("Sessão de voto não encontrada"));
+        var session = sessionRepository.findById(sessionId).orElseThrow(() -> new ObjectNotFoundException("Sessão de voto não encontrada"));
         if (session.isOpen())
             throw new RuntimeException("Não é possível ter o resultado da votação durante uma sessão aberta");
 
@@ -39,7 +42,7 @@ public class VotationServiceImpl implements VotationService {
         var dto = new VoteRequestDTO();
         var session = sessionRepository.findById(sessionId).orElseThrow(() -> new RuntimeException("Nenhuma sessão encontrada."));
         if (!session.isOpen())
-            throw new RuntimeException("Nenhuma pode votar.");
+            throw new CountVoteSessionOpenException(ExceptionEnum.COUNT_VOTE_SESSION_OPEN.getDescription());
 
         var votation = votationRepository.findBySessionIdAndAssociateId(sessionId, associateId);
         if (votation != null)
