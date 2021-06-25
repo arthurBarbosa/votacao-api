@@ -38,6 +38,6 @@ public class AssociateServiceImpl implements AssociateService {
     @Override
     public List<AssociateResponseDTO> findAll() {
         List<Associate> associates = associateRepository.findAll();
-        return associates.stream().map(x -> new AssociateResponseDTO(x)).collect(Collectors.toList());
+        return associates.stream().map(AssociateResponseDTO::new).collect(Collectors.toList());
     }
 }
