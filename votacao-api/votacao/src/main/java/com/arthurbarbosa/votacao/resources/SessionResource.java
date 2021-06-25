@@ -33,4 +33,10 @@ public class SessionResource {
     public ResponseEntity<SessionResponseDTO> findById(@PathVariable Long id) {
         return ResponseEntity.ok().body(sessionService.findById(id));
     }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<SessionResponseDTO> openSession(@PathVariable Long id) {
+        log.info("Opening session with id: {}", id);
+        return ResponseEntity.ok().body(sessionService.openSession(id));
+    }
 }
