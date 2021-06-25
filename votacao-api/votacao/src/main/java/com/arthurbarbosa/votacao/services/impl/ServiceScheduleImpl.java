@@ -22,4 +22,11 @@ public class ServiceScheduleImpl implements ScheduleService {
         scheduleRepository.save(schedule);
         return new ScheduleResponseDTO(schedule);
     }
+
+    @Override
+    public ScheduleResponseDTO findById(Long id) {
+        var schedule = scheduleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Nenhum pauta encontrada com id " + id));
+        return new ScheduleResponseDTO(schedule);
+    }
 }

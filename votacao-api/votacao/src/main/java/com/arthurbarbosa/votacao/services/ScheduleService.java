@@ -5,4 +5,6 @@ import com.arthurbarbosa.votacao.dto.ScheduleResponseDTO;
 
 public interface ScheduleService {
     ScheduleResponseDTO save(ScheduleRequestDTO dto);
+
+    ScheduleResponseDTO findById(Long id);
 }
