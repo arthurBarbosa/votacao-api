@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/schedules")
 public class ScheduleResources {
@@ -27,5 +29,10 @@ public class ScheduleResources {
     @GetMapping(value = "/{id}")
     public ResponseEntity<ScheduleResponseDTO> findById(@PathVariable Long id) {
         return ResponseEntity.ok().body(scheduleService.findById(id));
+    }
+
+    @GetMapping(value = "/all")
+    public ResponseEntity<List<ScheduleResponseDTO>> findAll(){
+        return ResponseEntity.ok().body(scheduleService.findAll());
     }
 }
