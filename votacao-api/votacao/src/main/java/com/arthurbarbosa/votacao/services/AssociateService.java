@@ -5,4 +5,6 @@ import com.arthurbarbosa.votacao.dto.AssociateResponseDTO;
 
 public interface AssociateService {
     AssociateResponseDTO save(AssociateRequestDTO dto);
+
+    AssociateResponseDTO findById(Long id);
 }
