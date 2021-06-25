@@ -1,6 +1,7 @@
 package com.arthurbarbosa.votacao.resources.exceptions;
 
 import com.arthurbarbosa.votacao.services.exception.CountVoteSessionOpenException;
+import com.arthurbarbosa.votacao.services.exception.DuplicateCPFException;
 import com.arthurbarbosa.votacao.services.exception.ObjectNotFoundException;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -91,6 +92,15 @@ public class ErrorHandlerExcption extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleException(ObjectNotFoundException ex, WebRequest request){
         HttpStatus status = HttpStatus.NOT_FOUND;
         ExceptionEnum errorType = ExceptionEnum.RESOURCE_NOT_FOUND;
+        String msg = ex.getMessage();
+        Error errors = createErrorBuilder(status, errorType, msg).build();
+        return handleExceptionInternal(ex, errors, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(DuplicateCPFException.class)
+    public ResponseEntity<Object> handleException(DuplicateCPFException ex, WebRequest request){
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        ExceptionEnum errorType = ExceptionEnum.DUPLICATE_CPF;
         String msg = ex.getMessage();
         Error errors = createErrorBuilder(status, errorType, msg).build();
         return handleExceptionInternal(ex, errors, new HttpHeaders(), status, request);

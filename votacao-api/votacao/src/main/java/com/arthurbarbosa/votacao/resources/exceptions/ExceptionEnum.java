@@ -7,6 +7,7 @@ public enum ExceptionEnum {
 
     INVALID_DATA("/dados-invalidos", "Dados inválidos"),
     RESOURCE_NOT_FOUND("/recurso-nao-encontrado", "Recurso não encontrado"),
+    DUPLICATE_CPF("/cpf-duplicado", "O CPF já existe na base de dados"),
     COUNT_VOTE_SESSION_OPEN("/votacao-sessao-aberta", "Não é possível ter o resultado da votação durante uma sessão aberta");
 
     private String uri;
