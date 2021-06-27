@@ -12,6 +12,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
@@ -41,5 +43,17 @@ public class ScheduleServiceTest {
 
         assertThat(savedSchedule.getId()).isNotNull();
         assertThat(savedSchedule.getDescription()).isEqualTo("Aumento da taxa");
+    }
+
+    @Test
+    public void should_find_schedule_by_id(){
+        Long id = 1L;
+        var schedule = Schedule.builder().id(id).description("Aumento da taxa").build();
+
+        Mockito.when(scheduleRepository.findById(id)).thenReturn(Optional.of(schedule));
+
+        var dto = scheduleService.findById(id);
+
+        assertThat(dto.getDescription()).isEqualTo(schedule.getDescription());
     }
 }
