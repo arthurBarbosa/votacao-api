@@ -7,8 +7,10 @@ import com.arthurbarbosa.votacao.repositories.AssociateRepository;
 import com.arthurbarbosa.votacao.repositories.SessionRepository;
 import com.arthurbarbosa.votacao.repositories.VotationRepository;
 import com.arthurbarbosa.votacao.resources.exceptions.ExceptionEnum;
+import com.arthurbarbosa.votacao.services.ValidateCPFService;
 import com.arthurbarbosa.votacao.services.VotationService;
 import com.arthurbarbosa.votacao.services.exception.CountVoteSessionOpenException;
+import com.arthurbarbosa.votacao.services.exception.DuplicateVoteException;
 import com.arthurbarbosa.votacao.services.exception.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +20,13 @@ public class VotationServiceImpl implements VotationService {
     private final SessionRepository sessionRepository;
     private final VotationRepository votationRepository;
     private final AssociateRepository associateRepository;
+    private final ValidateCPFService validateCPFService;
 
-    public VotationServiceImpl(SessionRepository sessionRepository, VotationRepository votationRepository, AssociateRepository associateRepository) {
+    public VotationServiceImpl(SessionRepository sessionRepository, VotationRepository votationRepository, AssociateRepository associateRepository, ValidateCPFService validateCPFService) {
         this.sessionRepository = sessionRepository;
         this.votationRepository = votationRepository;
         this.associateRepository = associateRepository;
+        this.validateCPFService = validateCPFService;
     }
 
     @Override
@@ -46,9 +50,10 @@ public class VotationServiceImpl implements VotationService {
 
         var votation = votationRepository.findBySessionIdAndAssociateId(sessionId, associateId);
         if (votation != null)
-            throw new RuntimeException("Voto duplicado");
+            throw new DuplicateVoteException(ExceptionEnum.DUPLICATE_VOTE.getDescription());
         else {
             var associate = associateRepository.findById(associateId).orElseThrow(() -> new ObjectNotFoundException(ExceptionEnum.RESOURCE_NOT_FOUND.getDescription()));
+            validateCPFService.validateCPF(associate.getCpf());
             votation = new Votation();
             votation.setSession(session);
             votation.setAssociate(associate);
