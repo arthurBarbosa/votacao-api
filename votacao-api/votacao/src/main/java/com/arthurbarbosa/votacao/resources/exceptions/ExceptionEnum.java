@@ -9,6 +9,9 @@ public enum ExceptionEnum {
     RESOURCE_NOT_FOUND("/recurso-nao-encontrado", "Recurso não encontrado"),
     DUPLICATE_CPF("/cpf-duplicado", "O CPF já existe na base de dados"),
     INVALID_SESSION_DURATION("/duracao-sessao-invalida", "A duração da sessão não pode ser menor que 1 minuto"),
+    SERVICE_UNAVALAIBLE("/servico-indisponivel", "Serviço (indisponivel/cpf inválido) tente novamente mais tarde."),
+    UNABLE_TO_VOTE("/voto-nao-permitido", "Associado não habilitado para voto"),
+    DUPLICATE_VOTE("/voto-duplicado", "Não é permitido votar mais de uma vez."),
     COUNT_VOTE_SESSION_OPEN("/votacao-sessao-aberta", "Não é possível ter o resultado da votação durante uma sessão aberta");
 
     private String uri;

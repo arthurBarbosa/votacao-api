@@ -1,8 +1,6 @@
 package com.arthurbarbosa.votacao.resources.exceptions;
 
-import com.arthurbarbosa.votacao.services.exception.CountVoteSessionOpenException;
-import com.arthurbarbosa.votacao.services.exception.DuplicateCPFException;
-import com.arthurbarbosa.votacao.services.exception.ObjectNotFoundException;
+import com.arthurbarbosa.votacao.services.exception.*;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
@@ -35,7 +33,7 @@ public class ErrorHandlerExcption extends ResponseEntityExceptionHandler {
         this.messageSource = messageSource;
     }
 
-    private Error.ErrorBuilder createErrorBuilder(HttpStatus status, ExceptionEnum exception, String message){
+    private Error.ErrorBuilder createErrorBuilder(HttpStatus status, ExceptionEnum exception, String message) {
         return Error.builder().timestamp(OffsetDateTime.now()).status(status.value()).type(exception.getUri())
                 .title(exception.getDescription()).msg(message);
     }
@@ -71,7 +69,7 @@ public class ErrorHandlerExcption extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    public ResponseEntity<Object> handleException(SQLIntegrityConstraintViolationException ex, WebRequest request){
+    public ResponseEntity<Object> handleException(SQLIntegrityConstraintViolationException ex, WebRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         ExceptionEnum errorType = ExceptionEnum.INVALID_DATA;
         String msg = ex.getMessage();
@@ -89,7 +87,7 @@ public class ErrorHandlerExcption extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(ObjectNotFoundException.class)
-    public ResponseEntity<Object> handleException(ObjectNotFoundException ex, WebRequest request){
+    public ResponseEntity<Object> handleException(ObjectNotFoundException ex, WebRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
         ExceptionEnum errorType = ExceptionEnum.RESOURCE_NOT_FOUND;
         String msg = ex.getMessage();
@@ -98,9 +96,36 @@ public class ErrorHandlerExcption extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(DuplicateCPFException.class)
-    public ResponseEntity<Object> handleException(DuplicateCPFException ex, WebRequest request){
+    public ResponseEntity<Object> handleException(DuplicateCPFException ex, WebRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         ExceptionEnum errorType = ExceptionEnum.DUPLICATE_CPF;
+        String msg = ex.getMessage();
+        Error errors = createErrorBuilder(status, errorType, msg).build();
+        return handleExceptionInternal(ex, errors, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(ErrorValidateCPFException.class)
+    public ResponseEntity<Object> handleException(ErrorValidateCPFException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.SERVICE_UNAVAILABLE;
+        ExceptionEnum errorType = ExceptionEnum.SERVICE_UNAVALAIBLE;
+        String msg = ex.getMessage();
+        Error errors = createErrorBuilder(status, errorType, msg).build();
+        return handleExceptionInternal(ex, errors, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(UnableToVoteException.class)
+    public ResponseEntity<Object> handleException(UnableToVoteException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        ExceptionEnum errorType = ExceptionEnum.UNABLE_TO_VOTE;
+        String msg = ex.getMessage();
+        Error errors = createErrorBuilder(status, errorType, msg).build();
+        return handleExceptionInternal(ex, errors, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(DuplicateVoteException.class)
+    public ResponseEntity<Object> handleException(DuplicateVoteException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        ExceptionEnum errorType = ExceptionEnum.DUPLICATE_VOTE;
         String msg = ex.getMessage();
         Error errors = createErrorBuilder(status, errorType, msg).build();
         return handleExceptionInternal(ex, errors, new HttpHeaders(), status, request);

@@ -26,6 +26,8 @@ public class VotationServiceTest {
 
     private VotationService votationService;
 
+    private ValidateCPFService validateCPFService;
+
     @MockBean
     private VotationRepository votationRepository;
     @MockBean
@@ -34,9 +36,10 @@ public class VotationServiceTest {
     private AssociateRepository associateRepository;
 
 
+
     @BeforeEach
     public void setUp() {
-        this.votationService = new VotationServiceImpl(sessionRepository, votationRepository, associateRepository);
+        this.votationService = new VotationServiceImpl(sessionRepository, votationRepository, associateRepository, validateCPFService);
     }
 
     @Test
