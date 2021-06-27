@@ -1,9 +1,11 @@
 package com.arthurbarbosa.votacao.entities;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
@@ -18,10 +20,10 @@ public class Session {
     @Column(name = "SES_ID", nullable = false)
     private Long id;
 
-    @Column(name = "SES_DURATION", columnDefinition = "bigint unsigned default 1", nullable = false)
+    @Column(name = "SES_DURATION", nullable = false)
     private Long duration;
 
-    @Column(name = "SES_ISOPEN", columnDefinition = "tinyint default 0", nullable = false)
+    @Column(name = "SES_ISOPEN", nullable = false)
     private boolean isOpen;
 
     @OneToOne
@@ -29,7 +31,7 @@ public class Session {
     private Schedule schedule;
 
     @PrePersist
-    public void prePersist(){
+    public void prePersist() {
         this.isOpen = false;
     }
 }

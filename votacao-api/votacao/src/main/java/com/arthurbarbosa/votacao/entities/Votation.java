@@ -1,6 +1,9 @@
 package com.arthurbarbosa.votacao.entities;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -18,7 +21,7 @@ public class Votation implements Serializable {
     @Column(name = "VOT_ID", nullable = false)
     private Long id;
 
-    @Column(name = "VOT_VOTE", columnDefinition = "tinyint", nullable = false)
+    @Column(name = "VOT_VOTE", nullable = false)
     private Boolean vote;
 
     @ManyToOne(fetch = FetchType.LAZY)
