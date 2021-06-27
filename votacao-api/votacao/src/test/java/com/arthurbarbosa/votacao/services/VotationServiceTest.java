@@ -1,6 +1,9 @@
 package com.arthurbarbosa.votacao.services;
 
+import com.arthurbarbosa.votacao.entities.Associate;
+import com.arthurbarbosa.votacao.entities.Schedule;
 import com.arthurbarbosa.votacao.entities.Session;
+import com.arthurbarbosa.votacao.entities.Votation;
 import com.arthurbarbosa.votacao.repositories.AssociateRepository;
 import com.arthurbarbosa.votacao.repositories.SessionRepository;
 import com.arthurbarbosa.votacao.repositories.VotationRepository;
@@ -49,5 +52,26 @@ public class VotationServiceTest {
 
         assertThat(dto.getVotesYes()).isGreaterThanOrEqualTo(0);
         assertThat(dto.getVotesNo()).isGreaterThanOrEqualTo(0);
+    }
+
+    @Test
+    public void should_return_vote_success(){
+        boolean vote = false;
+        var schedule = Schedule.builder().id(1L).build();
+        var session = Session.builder().id(1L).isOpen(true).schedule(schedule).build();
+        Mockito.when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
+        var associate = Associate.builder().id(1L).build();
+        Mockito.when(associateRepository.findById(1L)).thenReturn(Optional.of(associate));
+
+        var votation = Votation.builder().associate(associate).vote(vote).session(session).build();
+        var savedVotation = Votation.builder().id(1L).associate(associate).vote(vote).session(session).build();
+
+        Mockito.when(votationRepository.save(votation)).thenReturn(savedVotation);
+
+        votationService.vote(session.getId(), vote, associate.getId());
+
+        assertThat(savedVotation.getId()).isNotNull();
+        assertThat(session.isOpen()).isTrue();
+        assertThat(savedVotation.getVote()).isNotNull();
     }
 }
