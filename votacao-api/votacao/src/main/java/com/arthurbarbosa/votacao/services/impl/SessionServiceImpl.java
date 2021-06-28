@@ -9,6 +9,7 @@ import com.arthurbarbosa.votacao.resources.exceptions.ExceptionEnum;
 import com.arthurbarbosa.votacao.services.SessionService;
 import com.arthurbarbosa.votacao.services.exception.InvalidSessionDurationException;
 import com.arthurbarbosa.votacao.services.exception.ObjectNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,10 +20,12 @@ public class SessionServiceImpl implements SessionService {
 
     private final ScheduleRepository scheduleRepository;
     private final SessionRepository sessionRepository;
+    private final ModelMapper modelMapper;
 
-    public SessionServiceImpl(ScheduleRepository scheduleRepository, SessionRepository sessionRepository) {
+    public SessionServiceImpl(ScheduleRepository scheduleRepository, SessionRepository sessionRepository, ModelMapper modelMapper) {
         this.scheduleRepository = scheduleRepository;
         this.sessionRepository = sessionRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -30,7 +33,7 @@ public class SessionServiceImpl implements SessionService {
         if (dto.getDuration() < 1)
             throw new InvalidSessionDurationException(ExceptionEnum.INVALID_SESSION_DURATION.getDescription());
 
-        var session = new Session();
+        var session = Session.builder().build();
         session.setDuration(dto.getDuration());
 
         var schedule = scheduleRepository.findById(dto.getScheduleId())
@@ -38,24 +41,14 @@ public class SessionServiceImpl implements SessionService {
         session.setSchedule(schedule);
 
         sessionRepository.save(session);
-
-        return SessionResponseDTO.builder()
-                .id(session.getId())
-                .duration(session.getDuration())
-                .isOpen(session.isOpen())
-                .scheduleId(session.getSchedule().getId()).build();
+        return modelMapper.map(session, SessionResponseDTO.class);
     }
 
     @Override
     public SessionResponseDTO findById(Long id) {
         var session = sessionRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(ExceptionEnum.RESOURCE_NOT_FOUND.getDescription()));
-
-        return SessionResponseDTO.builder()
-                .id(session.getId())
-                .duration(session.getDuration())
-                .isOpen(session.isOpen())
-                .scheduleId(session.getSchedule().getId()).build();
+        return modelMapper.map(session, SessionResponseDTO.class);
     }
 
     @Override
@@ -69,10 +62,6 @@ public class SessionServiceImpl implements SessionService {
                 .orElseThrow(() -> new ObjectNotFoundException(ExceptionEnum.RESOURCE_NOT_FOUND.getDescription()));
         session.setOpen(true);
         sessionRepository.save(session);
-        return SessionResponseDTO.builder()
-                .id(session.getId())
-                .duration(session.getDuration())
-                .isOpen(session.isOpen())
-                .scheduleId(session.getSchedule().getId()).build();
+        return modelMapper.map(session, SessionResponseDTO.class);
     }
 }
