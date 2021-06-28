@@ -79,7 +79,7 @@ public class ErrorHandlerExcption extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(CountVoteSessionOpenException.class)
     public ResponseEntity<Object> handleException(CountVoteSessionOpenException ex, WebRequest request) {
-        HttpStatus status = HttpStatus.BAD_REQUEST;
+        HttpStatus status = HttpStatus.OK;
         ExceptionEnum errorType = ExceptionEnum.COUNT_VOTE_SESSION_OPEN;
         String msg = ex.getMessage();
         Error errors = createErrorBuilder(status, errorType, msg).build();
