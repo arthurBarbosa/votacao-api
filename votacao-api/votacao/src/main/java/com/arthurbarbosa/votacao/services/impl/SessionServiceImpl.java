@@ -43,17 +43,19 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public SessionResponseDTO findById(Long id) {
-        var dto = new SessionResponseDTO();
         var session = sessionRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(ExceptionEnum.RESOURCE_NOT_FOUND.getDescription()));
 
-        return new SessionResponseDTO(session);
+        return SessionResponseDTO.builder()
+                .id(session.getId())
+                .duration(session.getDuration())
+                .isOpen(session.isOpen())
+                .scheduleId(session.getSchedule().getId()).build();
     }
 
     @Override
     public List<SessionResponseDTO> findAll() {
-        List<Session> sessions = sessionRepository.findAll();
-        return sessions.stream().map(SessionResponseDTO::new).collect(Collectors.toList());
+        return sessionRepository.findAll().stream().map(SessionResponseDTO::new).collect(Collectors.toList());
     }
 
     @Override
