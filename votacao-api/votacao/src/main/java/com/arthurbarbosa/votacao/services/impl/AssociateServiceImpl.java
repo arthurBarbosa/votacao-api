@@ -38,12 +38,11 @@ public class AssociateServiceImpl implements AssociateService {
     public AssociateResponseDTO findById(Long id) {
         var associate = associateRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(ExceptionEnum.RESOURCE_NOT_FOUND.getDescription()));
-        return new AssociateResponseDTO(associate);
+        return modelMapper.map(associate, AssociateResponseDTO.class);
     }
 
     @Override
     public List<AssociateResponseDTO> findAll() {
-        List<Associate> associates = associateRepository.findAll();
-        return associates.stream().map(AssociateResponseDTO::new).collect(Collectors.toList());
+        return associateRepository.findAll().stream().map(AssociateResponseDTO::new).collect(Collectors.toList());
     }
 }
