@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -35,15 +36,15 @@ public class VotationServiceTest {
     @MockBean
     private AssociateRepository associateRepository;
 
-
+    private ModelMapper modelMapper;
 
     @BeforeEach
     public void setUp() {
-        this.votationService = new VotationServiceImpl(sessionRepository, votationRepository, associateRepository, validateCPFService);
+        this.votationService = new VotationServiceImpl(sessionRepository, votationRepository, associateRepository, validateCPFService, modelMapper);
     }
 
     @Test
-    public void should_count_votes(){
+    public void should_count_votes() {
         Long sessionId = 1L;
         var session = Session.builder().id(1L).build();
         Mockito.when(sessionRepository.findById(sessionId)).thenReturn(Optional.of(session));
@@ -58,7 +59,7 @@ public class VotationServiceTest {
     }
 
     @Test
-    public void should_return_vote_success(){
+    public void should_return_vote_success() {
         boolean vote = false;
         var schedule = Schedule.builder().id(1L).build();
         var session = Session.builder().id(1L).isOpen(true).schedule(schedule).build();
