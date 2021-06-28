@@ -7,6 +7,7 @@ import com.arthurbarbosa.votacao.repositories.ScheduleRepository;
 import com.arthurbarbosa.votacao.resources.exceptions.ExceptionEnum;
 import com.arthurbarbosa.votacao.services.ScheduleService;
 import com.arthurbarbosa.votacao.services.exception.ObjectNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,16 +17,18 @@ import java.util.stream.Collectors;
 public class ServiceScheduleImpl implements ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final ModelMapper modelMapper;
 
-    public ServiceScheduleImpl(ScheduleRepository scheduleRepository) {
+    public ServiceScheduleImpl(ScheduleRepository scheduleRepository, ModelMapper modelMapper) {
         this.scheduleRepository = scheduleRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
     public ScheduleResponseDTO save(ScheduleRequestDTO dto) {
-        var schedule = new Schedule(null, dto.getDescription());
+        var schedule = Schedule.builder().description(dto.getDescription()).build();
         scheduleRepository.save(schedule);
-        return new ScheduleResponseDTO(schedule);
+        return modelMapper.map(schedule, ScheduleResponseDTO.class);
     }
 
     @Override
