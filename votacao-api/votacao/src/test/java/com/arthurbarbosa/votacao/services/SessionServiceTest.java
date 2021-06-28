@@ -30,10 +30,14 @@ public class SessionServiceTest {
 
     @MockBean
     private ScheduleRepository scheduleRepository;
+
     private ModelMapper modelMapper;
+
+    private VotationService votationService;
+
     @BeforeEach
     public void setUp(){
-        this.sessionService = new SessionServiceImpl(scheduleRepository, sessionRepository, modelMapper);
+        this.sessionService = new SessionServiceImpl(scheduleRepository, sessionRepository, modelMapper, votationService);
     }
 
     @Test

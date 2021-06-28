@@ -2,11 +2,13 @@ package com.arthurbarbosa.votacao.services.impl;
 
 import com.arthurbarbosa.votacao.dto.SessionRequestDTO;
 import com.arthurbarbosa.votacao.dto.SessionResponseDTO;
+import com.arthurbarbosa.votacao.dto.VoteCountDTO;
 import com.arthurbarbosa.votacao.entities.Session;
 import com.arthurbarbosa.votacao.repositories.ScheduleRepository;
 import com.arthurbarbosa.votacao.repositories.SessionRepository;
 import com.arthurbarbosa.votacao.resources.exceptions.ExceptionEnum;
 import com.arthurbarbosa.votacao.services.SessionService;
+import com.arthurbarbosa.votacao.services.VotationService;
 import com.arthurbarbosa.votacao.services.exception.InvalidSessionDurationException;
 import com.arthurbarbosa.votacao.services.exception.ObjectNotFoundException;
 import org.modelmapper.ModelMapper;
@@ -21,11 +23,13 @@ public class SessionServiceImpl implements SessionService {
     private final ScheduleRepository scheduleRepository;
     private final SessionRepository sessionRepository;
     private final ModelMapper modelMapper;
+    private final VotationService votationService;
 
-    public SessionServiceImpl(ScheduleRepository scheduleRepository, SessionRepository sessionRepository, ModelMapper modelMapper) {
+    public SessionServiceImpl(ScheduleRepository scheduleRepository, SessionRepository sessionRepository, ModelMapper modelMapper, VotationService votationService) {
         this.scheduleRepository = scheduleRepository;
         this.sessionRepository = sessionRepository;
         this.modelMapper = modelMapper;
+        this.votationService = votationService;
     }
 
     @Override
@@ -62,6 +66,30 @@ public class SessionServiceImpl implements SessionService {
                 .orElseThrow(() -> new ObjectNotFoundException(ExceptionEnum.RESOURCE_NOT_FOUND.getDescription()));
         session.setOpen(true);
         sessionRepository.save(session);
+
+        finishSession(session);
+
         return modelMapper.map(session, SessionResponseDTO.class);
+    }
+
+    private void finishSession(Session session) {
+        new Thread(() -> {
+            int delay = (int) (1000 * 60 * session.getDuration());
+            try {
+                Thread.sleep(delay);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            session.setOpen(false);
+            sessionRepository.save(session);
+            var voteCountDTO = votationService.countVotes(session.getId());
+            Long votesYes = voteCountDTO.getVotesYes();
+            Long votesNo = voteCountDTO.getVotesNo();
+            var dispatcher = new KafkaDispatcherServiceImpl();
+            var value = "A sessão com id: " + session.getId() + " encerrou. \n" + "Resultado \n" + "Votos SIM: " + votesYes + "\n" +
+                    "Votos NÃO: " + votesNo + "\n";
+            dispatcher.send("SESSION_CLOSED", value, value);
+
+        }).start();
     }
 }
