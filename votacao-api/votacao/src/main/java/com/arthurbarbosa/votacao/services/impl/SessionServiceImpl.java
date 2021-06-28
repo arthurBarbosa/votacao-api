@@ -37,8 +37,13 @@ public class SessionServiceImpl implements SessionService {
                 .orElseThrow(() -> new ObjectNotFoundException(ExceptionEnum.RESOURCE_NOT_FOUND.getDescription()));
         session.setSchedule(schedule);
 
-        var sessionSave = sessionRepository.save(session);
-        return new SessionResponseDTO(sessionSave);
+        sessionRepository.save(session);
+
+        return SessionResponseDTO.builder()
+                .id(session.getId())
+                .duration(session.getDuration())
+                .isOpen(session.isOpen())
+                .scheduleId(session.getSchedule().getId()).build();
     }
 
     @Override
