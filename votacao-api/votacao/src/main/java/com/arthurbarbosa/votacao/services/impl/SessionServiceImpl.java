@@ -72,6 +72,15 @@ public class SessionServiceImpl implements SessionService {
         return modelMapper.map(session, SessionResponseDTO.class);
     }
 
+    @Override
+    public SessionResponseDTO closeSession(Long id) {
+        var session = sessionRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(ExceptionEnum.RESOURCE_NOT_FOUND.getDescription()));
+        session.setOpen(false);
+        sessionRepository.save(session);
+        return modelMapper.map(session, SessionResponseDTO.class);
+    }
+
     private void finishSession(Session session) {
         new Thread(() -> {
             int delay = (int) (1000 * 60 * session.getDuration());

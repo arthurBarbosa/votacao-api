@@ -39,4 +39,10 @@ public class SessionResource {
         log.info("Opening session with id: {}", id);
         return ResponseEntity.ok().body(sessionService.openSession(id));
     }
+
+    @PutMapping(value = "/{id}/close")
+    public ResponseEntity<SessionResponseDTO> close(@PathVariable Long id) {
+        log.info("Closing session with id: {}", id);
+        return ResponseEntity.ok().body(sessionService.closeSession(id));
+    }
 }
