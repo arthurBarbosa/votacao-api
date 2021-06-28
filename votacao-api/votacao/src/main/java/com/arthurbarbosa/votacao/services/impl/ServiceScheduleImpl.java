@@ -35,7 +35,7 @@ public class ServiceScheduleImpl implements ScheduleService {
     public ScheduleResponseDTO findById(Long id) {
         var schedule = scheduleRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(ExceptionEnum.RESOURCE_NOT_FOUND.getDescription()));
-        return new ScheduleResponseDTO(schedule);
+        return modelMapper.map(schedule, ScheduleResponseDTO.class);
     }
 
     @Override
