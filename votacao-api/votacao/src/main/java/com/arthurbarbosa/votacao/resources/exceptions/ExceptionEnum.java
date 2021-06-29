@@ -12,7 +12,7 @@ public enum ExceptionEnum {
     SERVICE_UNAVALAIBLE("/servico-indisponivel", "Serviço (indisponivel/cpf inválido) tente novamente mais tarde."),
     UNABLE_TO_VOTE("/voto-nao-permitido", "Associado não habilitado para voto"),
     DUPLICATE_VOTE("/voto-duplicado", "Não é permitido votar mais de uma vez."),
-    COUNT_VOTE_SESSION_OPEN("/votacao-sessao-aberta", "Não é possível ter o resultado da votação durante uma sessão aberta");
+    COUNT_VOTE_SESSION_OPEN("/votacao-sessao-aberta", "Por favor aguarde ou encerre a sessão para a contagem dos votos.");
 
     private String uri;
     private String description;

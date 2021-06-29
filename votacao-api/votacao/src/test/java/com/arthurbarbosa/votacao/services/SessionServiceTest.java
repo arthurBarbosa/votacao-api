@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -29,9 +30,14 @@ public class SessionServiceTest {
 
     @MockBean
     private ScheduleRepository scheduleRepository;
+
+    private ModelMapper modelMapper;
+
+    private VotationService votationService;
+
     @BeforeEach
     public void setUp(){
-        this.sessionService = new SessionServiceImpl(scheduleRepository, sessionRepository);
+        this.sessionService = new SessionServiceImpl(scheduleRepository, sessionRepository, modelMapper, votationService);
     }
 
     @Test
