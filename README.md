@@ -35,7 +35,7 @@ Configure o acesso ao banco de dados em seu gerenciador de prefrência e execute
  http://localhost:8080/associates/register <br/>
  http://localhost:8080/associates/{id} <br/>
  http://localhost:8080/associates/all <br/>
- http://localhost:8080/votations/1/count-result <br/>
+ http://localhost:8080/votations/{id}/count-result <br/>
  http://localhost:8080/sessions <br/>
  http://localhost:8080/sessions/{id} <br/>
  http://localhost:8080/sessions/{id} <br/>
