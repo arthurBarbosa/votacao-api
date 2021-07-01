@@ -30,16 +30,16 @@ Configure o acesso ao banco de dados em seu gerenciador de prefrência e execute
 
 ## 🚀 Endpoints disponilizados a api
  http://localhost:8080/schedules <br/>
- http://localhost:8080/schedules/{id}
- http://localhost:8080/schedules/all
- http://localhost:8080/associates/register
- http://localhost:8080/associates/{id}
- http://localhost:8080/associates/all
- http://localhost:8080/votations/1/count-result
- http://localhost:8080/sessions
- http://localhost:8080/sessions/{id}
- http://localhost:8080/sessions/{id}
- http://localhost:8080/votations/session/{id}?vote=true&associateId={id}
+ http://localhost:8080/schedules/{id} <br/>
+ http://localhost:8080/schedules/all <br/>
+ http://localhost:8080/associates/register <br/>
+ http://localhost:8080/associates/{id} <br/>
+ http://localhost:8080/associates/all <br/>
+ http://localhost:8080/votations/1/count-result <br/>
+ http://localhost:8080/sessions <br/>
+ http://localhost:8080/sessions/{id} <br/>
+ http://localhost:8080/sessions/{id} <br/>
+ http://localhost:8080/votations/session/{id}?vote=true&associateId={id} <br/>
   
 ## 🚀 Acessando Documentação da aplicação através do swagger
 http://localhost:8080/swagger-ui.html
