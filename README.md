@@ -9,6 +9,7 @@ Java, Springboot, JPA para persistêcia de dados no banco de dados, Bean Validat
 para validação do objetos, uso do padrão data transfer object para trafego de objetos
 na rede, banco de dados h2 para desenvolvimento, em produção esta aplicação está usando
 Postgresql. A primeira versão desta aplicação esta hospedada no heroku usando o plano gratuito.
+Aplicação versionado utilizando git flow 
 
 # Acesso ao swagger-api da aplicação hospedado no Heroku
 
