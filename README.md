@@ -28,7 +28,7 @@ Com o Docker instalado rode o comando: docker run -p 5432:5432 --name votacao -e
 
 Configure o acesso ao banco de dados em seu gerenciador de prefrência e execute o comando sql que está no arquivo create.sql na pasta principal do projeto.
 
-## 🚀 Endpoints disponilizados a api
+## 🚀 Endpoints disponilizados pela api
  http://localhost:8080/schedules <br/>
  http://localhost:8080/schedules/{id} <br/>
  http://localhost:8080/schedules/all <br/>
